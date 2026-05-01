@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blaqgraphics Admin | Dashboard</title>
+  <meta name="description" content="Blaqgraphics admin dashboard for portfolio uploads and management.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="admin-body">
+  <div class="site-shell">
+    <header class="topbar is-scrolled">
+      <a class="brand" href="../index.html" aria-label="Blaqgraphics website">
+        <img src="../assets/blaqgraphics-logo.jpeg" alt="Blaqgraphics logo">
+        <div>
+          <strong>Blaqgraphics Admin</strong>
+          <span>Private portfolio dashboard</span>
+        </div>
+      </a>
+
+      <div class="topbar-actions">
+        <a class="admin-link" href="../index.html">View Website</a>
+        <button class="logout-button" id="logout-button" type="button">Logout</button>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <section class="admin-shell reveal is-visible">
+        <div class="admin-copy">
+          <p class="eyebrow">Dashboard</p>
+          <h2>Upload portfolio work and manage what the public website displays.</h2>
+          <p>
+            This area is intentionally separate from the live site. Add new work here, review what is showing, and remove items you no longer want displayed.
+          </p>
+
+          <div class="admin-metrics">
+            <article class="admin-metric">
+              <p class="eyebrow">Total items</p>
+              <strong id="metric-total">0</strong>
+            </article>
+            <article class="admin-metric">
+              <p class="eyebrow">Logos</p>
+              <strong id="metric-logos">0</strong>
+            </article>
+            <article class="admin-metric">
+              <p class="eyebrow">Graphics / Web</p>
+              <strong id="metric-mixed">0</strong>
+            </article>
+          </div>
+        </div>
+
+        <section class="manager">
+          <div class="manager-copy">
+            <h3>Add new portfolio item</h3>
+            <p>
+              Upload a project image, choose its category, and write a short description.
+              The live website reads from this same saved portfolio data.
+            </p>
+          </div>
+
+          <form class="manager-form" id="upload-form">
+            <label>
+              <span>Project title</span>
+              <input type="text" id="item-title" placeholder="e.g. Luxe Threads Logo" required>
+            </label>
+
+            <label>
+              <span>Category</span>
+              <select id="item-category" required>
+                <option value="logos">Logos</option>
+                <option value="graphics">Graphics</option>
+                <option value="web">Web / App</option>
+              </select>
+            </label>
+
+            <label class="full">
+              <span>Short description</span>
+              <textarea id="item-description" rows="3" placeholder="What did you create for the client?" required></textarea>
+            </label>
+
+            <label class="full">
+              <span>Upload image</span>
+              <input type="file" id="item-image" accept="image/*" required>
+            </label>
+
+            <button class="button button-gold full" type="submit">Upload Portfolio Item</button>
+            <p class="form-note admin-note" id="admin-note">Uploads from this page will appear on the public website portfolio.</p>
+          </form>
+        </section>
+      </section>
+
+      <section class="admin-overview reveal is-visible">
+        <div class="admin-toolbar">
+          <div>
+            <p class="eyebrow">Portfolio library</p>
+            <h3>Review and manage what visitors see on the website.</h3>
+          </div>
+          <button class="button button-dark" id="reset-portfolio" type="button">Reset To Default</button>
+        </div>
+
+        <div class="portfolio-grid" id="admin-portfolio-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

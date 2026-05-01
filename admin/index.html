@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blaqgraphics Admin | Login</title>
+  <meta name="description" content="Secure admin login for the Blaqgraphics portfolio manager.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="admin-body">
+  <div class="login-layout">
+    <div class="login-shell">
+      <section class="login-side reveal is-visible">
+        <div class="login-brand">
+          <img src="../assets/blaqgraphics-logo.jpeg" alt="Blaqgraphics logo">
+          <div>
+            <strong>Blaqgraphics</strong>
+            <span>Private admin route</span>
+          </div>
+        </div>
+        <p class="eyebrow">Protected access</p>
+        <h2>Portfolio control for the brand behind the scenes.</h2>
+        <p class="login-subtext">
+          This route is designed for private management of your showcase items. Only authenticated access should reach the admin dashboard.
+        </p>
+
+        <div class="admin-points">
+          <div>
+            <strong>Route</strong>
+            <p class="helper-text">Use <code>/admin</code> as the hidden entry point instead of linking admin from the public website.</p>
+          </div>
+          <div>
+            <strong>Session gate</strong>
+            <p class="helper-text">A successful login unlocks the dashboard and stores a session for this browser until logout.</p>
+          </div>
+          <div>
+            <strong>Shared portfolio</strong>
+            <p class="helper-text">Uploads made inside admin still feed the public portfolio automatically on this device.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="login-card reveal is-visible">
+        <p class="eyebrow">Admin login</p>
+        <h1>Enter your credentials</h1>
+        <p class="login-subtext">Authorized access only.</p>
+
+        <form class="login-form" id="login-form">
+          <label class="full">
+            <span>Username</span>
+            <input type="text" id="username" autocomplete="username" required>
+          </label>
+
+          <label class="full">
+            <span>Password</span>
+            <input type="password" id="password" autocomplete="current-password" required>
+          </label>
+
+          <button class="button button-gold full" type="submit">Unlock Admin</button>
+          <p class="form-note login-error hidden" id="login-error">Incorrect username or password.</p>
+        </form>
+      </section>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>
