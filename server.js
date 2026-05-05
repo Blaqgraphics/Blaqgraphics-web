@@ -23,6 +23,9 @@ const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
 const SMTP_SECURE = String(process.env.SMTP_SECURE || "true") !== "false";
 const SMTP_USER = process.env.SMTP_USER || "";
 const SMTP_PASS = process.env.SMTP_PASS || "";
+const BREVO_API_KEY = process.env.BREVO_API_KEY || "";
+const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || SMTP_USER || "";
+const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || "Blaqgraphics";
 const QUOTE_TO_EMAIL = process.env.QUOTE_TO_EMAIL || "talk2blaqgraphicslivee@gmail.com";
 const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL || "";
 const sessions = new Map();
@@ -311,6 +314,24 @@ async function ensureQuotesFile() {
 }
 
 async function sendQuoteEmail(quote) {
+  const lines = [
+    "New Blaqgraphics quote request",
+    "",
+    `Name: ${quote.name}`,
+    `Email: ${quote.email}`,
+    `Service: ${quote.service}`,
+    `Follow-up Preference: ${quote.followUpPreference}`,
+    `Submitted: ${quote.createdAt}`,
+    "",
+    "Project Details:",
+    quote.details
+  ];
+
+  if (BREVO_API_KEY) {
+    await sendQuoteEmailWithBrevo(quote, lines.join("\n"));
+    return;
+  }
+
   if (!SMTP_USER || !SMTP_PASS) {
     return;
   }
@@ -325,21 +346,8 @@ async function sendQuoteEmail(quote) {
     }
   });
 
-  const lines = [
-    "New Blaqgraphics quote request",
-    "",
-    `Name: ${quote.name}`,
-    `Email: ${quote.email}`,
-    `Service: ${quote.service}`,
-    `Follow-up Preference: ${quote.followUpPreference}`,
-    `Submitted: ${quote.createdAt}`,
-    "",
-    "Project Details:",
-    quote.details
-  ];
-
   await transporter.sendMail({
-    from: `"Blaqgraphics Website" <${SMTP_USER}>`,
+    from: `"Blaqgraphics" <${SMTP_USER}>`,
     to: QUOTE_TO_EMAIL,
     replyTo: quote.email,
     subject: `Blaqgraphics Quote Request - ${quote.service}`,
@@ -347,7 +355,57 @@ async function sendQuoteEmail(quote) {
   });
 }
 
+async function sendQuoteEmailWithBrevo(quote, textContent) {
+  if (!BREVO_SENDER_EMAIL) {
+    throw new Error("Brevo sender email is missing");
+  }
 
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #1a1a1a;">
+      <h2 style="margin-bottom: 12px;">New Blaqgraphics quote request</h2>
+      <p><strong>Name:</strong> ${escapeHtml(quote.name)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(quote.email)}</p>
+      <p><strong>Service:</strong> ${escapeHtml(quote.service)}</p>
+      <p><strong>Follow-up Preference:</strong> ${escapeHtml(quote.followUpPreference)}</p>
+      <p><strong>Submitted:</strong> ${escapeHtml(quote.createdAt)}</p>
+      <p><strong>Project Details:</strong></p>
+      <p>${escapeHtml(quote.details).replace(/\n/g, "<br>")}</p>
+    </div>
+  `;
+
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "api-key": BREVO_API_KEY,
+      "content-type": "application/json"
+    },
+    body: JSON.stringify({
+      sender: {
+        name: BREVO_SENDER_NAME,
+        email: BREVO_SENDER_EMAIL
+      },
+      to: [
+        {
+          email: QUOTE_TO_EMAIL,
+          name: "Blaqgraphics"
+        }
+      ],
+      replyTo: {
+        email: quote.email,
+        name: quote.name
+      },
+      subject: `Blaqgraphics Quote Request - ${quote.service}`,
+      htmlContent,
+      textContent
+    })
+  });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(`Brevo API ${response.status}: ${detail}`);
+  }
+}
 
 function getSession(req) {
   const sessionId = getSessionId(req);
@@ -427,6 +485,15 @@ function sendText(res, statusCode, text) {
   res.end(text);
 }
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function createPlaceholderImage(title, label) {
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
@@ -449,6 +516,7 @@ function createPlaceholderImage(title, label) {
 
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
+
 
 
 
