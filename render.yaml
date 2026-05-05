@@ -2,6 +2,7 @@ services:
   - type: web
     name: blaqgraphics-backend
     runtime: node
+    plan: free
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /healthz
@@ -27,3 +28,4 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
+
