@@ -12,6 +12,12 @@ services:
         value: production
       - key: PUBLIC_BASE_URL
         sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER_EMAIL
+        sync: false
+      - key: BREVO_SENDER_NAME
+        sync: false
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
@@ -28,4 +34,3 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
-

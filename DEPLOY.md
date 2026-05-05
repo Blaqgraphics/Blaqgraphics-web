@@ -4,13 +4,16 @@ This project is ready for a simple Node backend deploy.
 
 ## Recommended host
 
-Render is the easiest fit for this project because it can run the Node server and serve the public site from one web service.
+Render is still a good fit for this project, but on the free plan you should use Brevo's email API instead of SMTP because Render free blocks outbound SMTP ports.
 
 ## Before deploy
 
 1. Push the folder to a GitHub repository.
 2. Make sure `.env` is NOT committed.
 3. Keep `render.yaml` in the project root.
+4. Create a free Brevo account.
+5. Generate a Brevo API key.
+6. Add and verify a sender email in Brevo.
 
 ## Render steps
 
@@ -20,16 +23,18 @@ Render is the easiest fit for this project because it can run the Node server an
 4. Render will detect `render.yaml`.
 5. Fill these environment variables in Render:
    - `PUBLIC_BASE_URL`
-   - `SMTP_HOST`
-   - `SMTP_PORT`
-   - `SMTP_SECURE`
-   - `SMTP_USER`
-   - `SMTP_PASS`
+   - `BREVO_API_KEY`
+   - `BREVO_SENDER_EMAIL`
+   - `BREVO_SENDER_NAME`
    - `QUOTE_TO_EMAIL`
    - `ADMIN_USERNAME`
    - `ADMIN_PASSWORD`
 6. Deploy.
 7. After deploy, set `PUBLIC_BASE_URL` to your real Render URL and redeploy once.
+
+## Optional SMTP fallback
+
+SMTP variables are still supported for local development or paid hosts, but free Render should use Brevo API delivery.
 
 ## Health check
 
